@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DeployCheck — n8n workflow pre-flight check</title>
+  <meta name="description" content="Know what's missing before deploying an n8n workflow to another environment.">
+  <style>
+    :root{--bg:#0b1020;--panel:#121a2e;--panel2:#0f172a;--text:#eef2ff;--muted:#9aa7bd;--line:#27324a;--good:#36d399;--bad:#fb7185;--warn:#fbbf24;--accent:#8b5cf6}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(circle at 20% 0,#182448 0,transparent 32%),var(--bg);color:var(--text)}
+    a{color:inherit}.wrap{max-width:1050px;margin:auto;padding:0 24px}.nav{height:72px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:800;letter-spacing:-.03em;font-size:20px}.pill{font-size:12px;border:1px solid var(--line);padding:7px 10px;border-radius:999px;color:var(--muted)}
+    .hero{text-align:center;padding:80px 0 55px}.eyebrow{color:#b9a7ff;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.12em}.hero h1{font-size:clamp(42px,7vw,72px);line-height:1.02;letter-spacing:-.055em;max-width:900px;margin:18px auto}.hero p{font-size:19px;line-height:1.6;color:var(--muted);max-width:720px;margin:0 auto 30px}
+    .btn{appearance:none;border:0;background:var(--accent);color:white;font-weight:750;font-size:16px;padding:14px 22px;border-radius:11px;cursor:pointer;box-shadow:0 10px 30px #8b5cf633}.sub{font-size:12px;color:var(--muted);margin-top:12px}
+    .grid{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;align-items:start;margin-bottom:80px}.card{background:linear-gradient(180deg,#141e35,#10182b);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 20px 60px #0004}.card h2{margin:0 0 8px;font-size:20px}.card p{color:var(--muted);line-height:1.55}
+    .steps{display:grid;gap:13px;margin-top:22px}.step{display:flex;gap:12px;align-items:flex-start}.num{display:grid;place-items:center;min-width:28px;height:28px;border-radius:8px;background:#202b48;color:#c4b5fd;font-weight:800;font-size:13px}.step b{display:block;margin-bottom:3px}.step span{color:var(--muted);font-size:14px}
+    .report-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:8px}.score{font-size:13px;color:var(--bad);background:#fb718512;border:1px solid #fb718544;padding:7px 10px;border-radius:999px;font-weight:700}.row{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:13px 0;border-bottom:1px solid #24304a99}.row:last-child{border:0}.icon{font-weight:900}.ok{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}.row small{display:block;color:var(--muted);margin-top:3px}.tag{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:4px 7px}
+    .section{text-align:center;padding:35px 0 90px}.section h2{font-size:34px;letter-spacing:-.035em;margin:0 0 12px}.section p{color:var(--muted);max-width:620px;margin:0 auto 24px;line-height:1.6}.footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:13px;text-align:center}
+    dialog{border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--text);padding:0;max-width:480px;width:calc(100% - 32px);box-shadow:0 30px 100px #0009}dialog::backdrop{background:#020617cc}.modal{padding:28px}.modal h3{font-size:24px;margin:0 0 10px}.modal p{color:var(--muted);line-height:1.5}.email{width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--line);background:#0b1222;color:white;font-size:15px;margin:8px 0 12px}.actions{display:flex;gap:10px}.secondary{background:#202a40;box-shadow:none}.note{font-size:11px!important}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.hero{padding-top:50px}.hero h1{font-size:44px}.nav .pill{display:none}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav"><div class="brand">DeployCheck</div><div class="pill">Early concept • n8n first</div></nav>
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Workflow deployment pre-flight</div>
+        <h1>Know what's missing before you deploy.</h1>
+        <p>Check an exported n8n workflow against a target environment and surface missing credentials, environment variables, triggers and non-portable dependencies before migration day.</p>
+        <button class="btn" onclick="openEarlyAccess()">Check my workflow</button>
+        <div class="sub">No workflow upload yet — we're validating early access.</div>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h2>From export to deployment-ready</h2>
+          <p>Exporting the workflow is only part of the job. DeployCheck is designed to find the surrounding configuration that still needs attention.</p>
+          <div class="steps">
+            <div class="step"><div class="num">1</div><div><b>Read the workflow</b><span>Extract credentials, env vars, triggers, external services and local dependencies.</span></div></div>
+            <div class="step"><div class="num">2</div><div><b>Compare the target</b><span>Identify what's already available and what still needs mapping or configuration.</span></div></div>
+            <div class="step"><div class="num">3</div><div><b>Get a pre-flight report</b><span>See blockers before the workflow is handed off or deployed.</span></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="report-head">
+            <div><h2>Deployment check</h2><p style="margin:4px 0 0">Lead Qualification → Customer B</p></div>
+            <div class="score">NOT READY</div>
+          </div>
+          <div class="row"><div class="icon bad">×</div><div><b>Production PostgreSQL</b><small>Credential must be created or mapped</small></div><div class="tag">CREDENTIAL</div></div>
+          <div class="row"><div class="icon bad">×</div><div><b>LEAD_SCORING_API_URL</b><small>Environment variable missing in target</small></div><div class="tag">ENV VAR</div></div>
+          <div class="row"><div class="icon warn">!</div><div><b>Lead Webhook</b><small>Trigger requires target configuration</small></div><div class="tag">TRIGGER</div></div>
+          <div class="row"><div class="icon ok">✓</div><div><b>Example CRM API</b><small>Available in target</small></div><div class="tag">CREDENTIAL</div></div>
+          <div class="row"><div class="icon ok">✓</div><div><b>Notification API</b><small>Available in target</small></div><div class="tag">CREDENTIAL</div></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Would this save you deployment time?</h2>
+        <p>We're testing whether workflow consultants and small automation teams need a lightweight dependency check before moving workflows between environments or clients.</p>
+        <button class="btn" onclick="openEarlyAccess()">Request early access</button>
+      </section>
+    </main>
+    <footer class="footer">DeployCheck is an early validation concept. No workflow files are collected on this page.</footer>
+  </div>
+
+  <dialog id="early">
+    <div class="modal">
+      <h3>Early access</h3>
+      <p>DeployCheck isn't open yet. If you'd use a deployment dependency check for n8n workflows, leave your email.</p>
+      <form id="interestForm">
+        <input class="email" id="email" type="email" placeholder="you@company.com" required>
+        <div class="actions">
+          <button class="btn" type="submit">I'm interested</button>
+          <button class="btn secondary" type="button" onclick="document.getElementById('early').close()">Not now</button>
+        </div>
+      </form>
+      <p class="note" id="formNote">Demo only: this local version does not transmit or store your email.</p>
+    </div>
+  </dialog>
+
+<script>
+function openEarlyAccess(){
+  document.getElementById('early').showModal();
+}
+document.getElementById('interestForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  localStorage.setItem('deploycheck_interest', email);
+  document.getElementById('formNote').textContent =
+    "Interest recorded locally for this demo. Before publishing, we'll connect this button to a real signup/analytics endpoint.";
+});
+</script>
+</body>
+</html>
