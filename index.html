@@ -27,6 +27,9 @@
     .actions{display:flex;gap:10px}.secondary{background:#202a40;box-shadow:none}.note{font-size:12px!important}.success{color:var(--good)!important;font-weight:700}
     @media(max-width:760px){.grid{grid-template-columns:1fr}.hero{padding-top:50px}.hero h1{font-size:44px}.nav .pill{display:none}}
   </style>
+
+  <script data-goatcounter="https://deploycheck.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -91,7 +94,14 @@
   </dialog>
 
 <script>
+function trackEvent(path, title){
+  if (window.goatcounter && window.goatcounter.count) {
+    window.goatcounter.count({path: path, title: title, event: true});
+  }
+}
+
 function openEarlyAccess(){
+  trackEvent('/event/cta_open', 'cta_open');
   document.getElementById('early').showModal();
 }
 document.getElementById('interestForm').addEventListener('submit', async function(e){
@@ -110,6 +120,7 @@ document.getElementById('interestForm').addEventListener('submit', async functio
       headers: { 'Accept': 'application/json' }
     });
     if (response.ok) {
+      trackEvent('/event/early_access_signup', 'early_access_signup');
       form.reset();
       note.className = 'note success';
       note.textContent = "You're on the early-access list. Thank you.";
